@@ -1,0 +1,27 @@
+{% extends 'home.html' %}
+
+{% block body %}
+<div class="row m-2">
+    <h2>Edit your task.</h2>
+    <form action="{% url 'edit_task' task.id %}", method="POST">
+        {% csrf_token %}
+        <br>
+        <br>
+        <textarea rows = "5" cols = "60" name = "title" placeholder="Enter details here...">
+            {{task.title}}
+        </textarea><br>
+        <input type="date" id="date" name="date" value="{{day}}">
+        <input type="submit", value="Save">
+    </form>
+
+
+</div>
+
+
+{% endblock %}
+
+{% block js %} 
+//console.log({{day}});
+//$("date").value= "{{day}}";
+
+{% endblock %}

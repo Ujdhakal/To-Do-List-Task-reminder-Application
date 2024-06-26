@@ -1,0 +1,88 @@
+{% extends 'home.html' %}
+
+{% block body %}
+<div class="row m-2">
+    <div class="col-md-6">
+        <form action="/create/task/", method="POST">
+            {% csrf_token %}
+            Create Your Task here.
+            <br>
+            <br>
+            <textarea rows = "5" cols = "60" name = "title" placeholder="Enter details here...">
+                
+            </textarea><br>
+            <input type="date" id="date" name="date">
+            <input type="submit", value="Save">
+        </form>
+    </div>
+    <div class="col-md-6">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Task List</th>
+                <th>Due On</th>
+                <th>Status</th>
+        
+            </tr>
+            </thead>
+            <tbody>
+            {% for task in tasklist %}
+            {% if task.done %}
+                <tr class=" progress-bar-striped bg-warning font-italic">
+            {% else %}
+                <tr class="font-weight-normal">
+            {% endif %}
+                <td>
+                    <div>
+                        <a href="{% url 'edit_task' task.id %}">{{ task.title }}</a>
+                    </div>
+        
+                </td>
+                <td>
+                    {{task.date}}
+                </td>
+                {% if task.done %}
+                    <td>
+                        <a href="{% url 'delete_task' task.id %}" class="btn btn-danger" role="button">Done</a>
+                        <!-- <button href="#" type="button" class="btn btn-danger">Mark Incomplete</button> -->
+                    </td>
+                {% else %}
+                    <td>
+                        <a href="{% url 'delete_task' task.id %}" class="btn btn-success" role="button">To Do</a>
+                        <!-- <button  type="button" class="btn btn-success">Mark Complete</button> -->
+                    </td>
+                {% endif %}
+        
+                
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div> 
+        {% if tasklist.has_other_pages %}
+            <ul class="pagination">
+            {% if tasklist.has_previous %}
+                <li><a href="?page={{ tasklist.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+                <li class="disabled"><span>&laquo;</span></li>
+            {% endif %}
+            {% for i in tasklist.paginator.page_range %}
+                {% if tasklist.number == i %}
+                <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                {% else %}
+                <li><a href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% if tasklist.has_next %}
+                <li><a href="?page={{ tasklist.next_page_number }}">&raquo;</a></li>
+            {% else %}
+                <li class="disabled"><span>&raquo;</span></li>
+            {% endif %}
+            </ul>
+        {% endif %}
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
